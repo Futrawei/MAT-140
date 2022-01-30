@@ -1,0 +1,108 @@
+# Travis Barbur
+
+
+import sys
+
+
+# Function defining inventory items and location
+def get_item(room):
+	items = {
+		'Basement': 'Backpack',
+		'Main Bedroom': 'Bike Helmet',
+		'Bedroom 1': 'Homework',
+		'Kitchen': 'Lunch',
+		'Laundry Room': 'Headphones',
+		'Bathroom': 'Gym Sneakers',
+
+	}
+	return items[room]
+
+
+# print main menu and user commands
+def main():
+	print('Welcome to the Ninja Blade Text Adventure Game!'),
+	print('Collect 6 items to win the game or be caught by Ninja blade. ')
+	print('Move commands: go South, go North, go East, go West')
+	print("Add to inventory: get 'item name'")
+
+
+main()
+
+
+# define player position and store it in the while loop
+def player_position():
+	print('----------------------------')
+	print('You are in the {}.'.format(room))
+	print('----------------------------')
+
+
+# Function for getting location
+def get_new_room(room, direction):
+	next_room = room
+	# assign next room with a for loop to move to another room
+	for i in rooms:
+		if i == room:
+			if direction in rooms[room]:
+				next_room = rooms[room][direction]
+	# Return new location
+	return next_room
+
+
+# Blank inventory
+inventory = []
+direction = ['North', 'East', 'South', 'West']
+room = 'Garage'
+
+# Dictionary linking items and rooms
+rooms = {
+
+	'Garage': {'North': 'Basement', 'West': 'Main Bedroom'},
+	'Basement': {'South': 'Garage', 'Item': 'Backpack'},
+	'Main Bedroom': {'West': 'Den', 'North': 'Laundry Room', 'South': 'Bedroom 1', 'Item': 'Bike Helmet'},
+	'Bedroom 1': {'North': 'Main Bedroom', 'East': 'Kitchen', 'Item': 'Homework'},
+	'Kitchen': {'West': 'Bedroom 1', 'Item': 'Lunch'},
+	'Laundry Room': {'East': 'Bathroom', 'South': 'Main Bedroom', 'Item': 'Headphones'},
+	'Bathroom': {'West': 'Laundry Room', 'Item': 'Gym Sneakers'},
+	'Den': {'East': 'Main Bedroom'}
+
+}
+
+# Starting gameplay loop
+while True:
+	player_position()
+	# Output current position and inventory
+	print('Inventory: ', inventory)
+	if 'Item' in rooms[room] and rooms[room]['Item'] not in inventory:
+		print('You see ' + rooms[room]['Item'])
+		user_input = input()
+		if user_input == "get " + rooms[room]['Item']:
+			inventory.append(rooms[room]['Item'])
+			print(rooms[room]['Item'], "collected.")
+		else:
+			print()
+
+	# Game ends when all 6 items are collected
+	if len(inventory) == 6 and 'items':
+		print('\n**  Congratulations, you grabbed all of the items without disturbing Ninja Blade! You Won!  ** \n')
+		exit(0)
+	# Prompt user to enter direction
+	direction = input('Enter a move: ').lower()
+	# Capitalize first letter
+	direction = direction.capitalize()
+	# Initialize loop to check for valid movement between rooms
+	if direction == 'North' or direction == 'South' or direction == 'East' or direction == 'West':
+		room_dict = rooms[room]
+		if direction in room_dict:
+			room = get_new_room(room, direction)
+		else:
+			print('Wrong Way! Try again.')
+
+	# If invalid direction, prompt for new direction
+	else:
+		print("Invalid Command")
+	if room == 'Den':
+		sys.exit('Ninja Blade caught you! Game Over.')
+	# Quit Game
+	elif direction == 'Exit':
+		sys.exit("You've Exited the Game.")
+	print()
